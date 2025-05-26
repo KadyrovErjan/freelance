@@ -12,10 +12,9 @@ class CheckClient(permissions.BasePermission):
             return True
         return False
 
-
 class CheckOfferEdit(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        if obj.freelance == request.user:
+        if obj.freelancer == request.user:
             return True
         return False
 
@@ -24,4 +23,11 @@ class CheckProjectEdit(permissions.BasePermission):
         if obj.client == request.user:
             return True
         return False
+
+
+class MethodCheck(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user == obj.client
 

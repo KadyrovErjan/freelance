@@ -36,37 +36,18 @@ class CustomLoginView(TokenObtainPairView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class LogoutView(generics.GenericAPIView):
-    def post(self, request, *args, **kwargs):
-        try:
-            refresh_token = request.data['refresh']
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-
-class UserProfileFreelanceListAPIView(generics.ListAPIView):
+class UserProfileListAPIView(generics.ListAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileClientSimpleSerializer
+    serializer_class = UserProfileListSerializer
     permission_classes = [permissions.IsAuthenticated, UserEdit]
 
+    def get_queryset(self):
+        return UserProfile.objects.filter(id=self.request.user.id)
 
-class UserProfileFreelanceDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class UserProfileDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticated, UserEdit]
-
-class UserProfileClientListAPIView(generics.ListAPIView):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileClientSimpleSerializer
-    permission_classes = [permissions.IsAuthenticated, UserEdit]
-
-
-class UserProfileClienteDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = UserProfile.objects.all()
-    serializer_class = UserProfileSerializer
+    serializer_class = UserProfileDetailSerializer
     permission_classes = [permissions.IsAuthenticated, UserEdit]
 
 
@@ -78,6 +59,7 @@ class SkillsViewSet(viewsets.ModelViewSet):
     queryset = Skills.objects.all()
     serializer_class = SkillsSerializer
 
+
 class ProjectListAPIView(generics.ListAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectListSerializer
@@ -87,7 +69,9 @@ class ProjectListAPIView(generics.ListAPIView):
     filterset_class = ProjectFilter
     ordering_fields = ['budget']
 
-class ProjectDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+
+
+class ProjectDetailAPIView(generics.RetrieveAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectDetailSerializer
 
@@ -97,7 +81,7 @@ class OfferListAPIView(generics.ListAPIView):
     serializer_class = OfferListSerializer
 
 
-class OfferDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class OfferDetailAPIView(generics.RetrieveAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferDetailSerializer
 
@@ -109,14 +93,12 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class ProjectCreateAPIView(generics.CreateAPIView):
     serializer_class = ProjectCreateSerializer
-
-    permission_classes = [permissions.IsAuthenticated, CheckProjectEdit]
+    permission_classes = [permissions.IsAuthenticated, CheckClient]
 
 class ProjectEditAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectCreateSerializer
-
-    permission_classes = [permissions.IsAuthenticated, CheckProjectEdit]
+    permission_classes = [permissions.IsAuthenticated, CheckProjectEdit, CheckClient]
 
 
 class OfferCreateAPIView(generics.CreateAPIView):

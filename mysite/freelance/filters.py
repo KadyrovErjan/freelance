@@ -10,3 +10,5 @@ class ProjectFilter(FilterSet):
             'category': ['exact'],
             'budget': ['gt', 'lt'],
         }
+
+

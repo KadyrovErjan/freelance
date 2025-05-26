@@ -27,7 +27,7 @@ from django.conf import settings
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Episyche Technologies",
+        title="Freelance",
         default_version='v1',),
     public=True,
     permission_classes=(permissions.AllowAny,),
@@ -37,6 +37,7 @@ schema_view = get_schema_view(
 urlpatterns = i18n_patterns(
     path('admin/', admin.site.urls),
     path('', include('freelance.urls')),
+    path('accounts/', include('allauth.urls')),
     path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 )+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

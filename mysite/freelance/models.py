@@ -1,8 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 class Skills(models.Model):
     skills = models.CharField(max_length=42)
+
+    def __str__(self):
+        return self.skills
 
 USER_ROLE = (
     ('freelancer', 'freelancer'),
@@ -17,8 +21,16 @@ class UserProfile(AbstractUser):
     social_links = models.URLField()
 
 
+    def __str__(self):
+        return self.username
+
+
+
 class Category(models.Model):
     category_name = models.CharField(max_length=32)
+
+    def __str__(self):
+        return self.category_name
 
 class Project(models.Model):
     title = models.CharField(max_length=32)
@@ -37,6 +49,8 @@ class Project(models.Model):
     client = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.client}, {self.title}'
 
 class Offer(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -46,6 +60,9 @@ class Offer(models.Model):
     proposed_deadline = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.freelancer}'
+
 class Review(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     reviewer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='client_review')
@@ -53,4 +70,8 @@ class Review(models.Model):
     rating = models.PositiveIntegerField(choices=[(i, str(i)) for i in range(1, 6)], null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.reviewer} - {self.rating}'
+
 

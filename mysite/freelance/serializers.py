@@ -1,7 +1,3 @@
-from symtable import Class
-
-from django.contrib.admin.utils import model_ngettext
-
 from .models import *
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -40,24 +36,20 @@ class CustomLoginSerializer(serializers.Serializer):
         }
 
 
-class UserProfileFreelancerSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ['username']
-
-
 class SkillsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skills
-        fields = ['skills']
+        fields = '__all__'
 
-
-
-class UserProfileClientSimpleSerializer(serializers.ModelSerializer):
-    skills = SkillsSerializer()
+class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['username', 'skills', 'social_links']
+        fields = ['id', 'username']
+
+class UserProfileDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -65,27 +57,29 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['category_name']
 
 class ProjectSimpleSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
     class Meta:
         model = Project
-        fields = ['title', 'category' 'status', 'budget']
+        fields = ['title', 'category', 'status', 'budget']
 
 class ProjectListSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
-    client = UserProfileClientSimpleSerializer()
+    client = UserProfileListSerializer()
     class Meta:
         model = Project
-        fields = ['title', 'category' 'status', 'budget', 'client']
+        fields = ['title', 'category', 'status', 'budget', 'client']
 
 class ProjectDetailSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
-    client = UserProfileClientSimpleSerializer()
+    client = UserProfileListSerializer()
     class Meta:
         model = Project
         fields = ['title', 'category', 'description', 'deadline', 'status', 'budget', 'skills_required', 'client', 'created_at']
 
 class ReviewSerializer(serializers.ModelSerializer):
-    model = Review
-    fields = '__all__'
+    class Meta:
+        model = Review
+        fields = '__all__'
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -105,7 +99,7 @@ class OfferListSerializer(serializers.ModelSerializer):
 
 class OfferDetailSerializer(serializers.ModelSerializer):
     project = ProjectListSerializer()
-    freelancer = UserProfileFreelancerSimpleSerializer()
+    freelancer = UserProfileListSerializer()
     class Meta:
         model = Offer
         fields = ['project', 'freelancer', 'proposed_budget', 'message', 'proposed_deadline', 'created_at']

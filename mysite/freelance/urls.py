@@ -17,11 +17,8 @@ urlpatterns = [
     path('offer/<int:pk>/', OfferDetailAPIView.as_view(), name='offer_detail'),
     path('offer/create/', OfferCreateAPIView.as_view(), name='offer_create'),
     path('offer/create/<int:pk>', OfferEditAPIView.as_view(), name='offer_edit'),
-    path('client_user/', UserProfileClientListAPIView.as_view(), name='client_user_list'),
-    path('client_user/<int:pk>', UserProfileClienteDetailAPIView.as_view(), name='client_user_detail'),
-    path('freelance_user/', UserProfileFreelanceListAPIView.as_view(), name='freelance_user_list'),
-    path('freelance_user/<int:pk>', UserProfileFreelanceDetailAPIView.as_view(), name='freelance_user_detail'),
+    path('user/', UserProfileListAPIView.as_view(), name='user_list'),
+    path('user/<int:pk>', UserProfileDetailAPIView.as_view(), name='user_detail'),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout')
 ]

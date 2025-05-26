@@ -1,9 +1,9 @@
 from django.contrib import admin
 from .models import *
-from modeltranslation.admin import TranslationAdmin
+from modeltranslation.admin import TranslationAdmin, TranslationInlineModelAdmin
 
 @admin.register(Project)
-class ProductAdmin(TranslationAdmin):
+class ProjectAdmin(TranslationAdmin):
     class Media:
         js = (
             'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js',
@@ -14,10 +14,10 @@ class ProductAdmin(TranslationAdmin):
             'screen': ('modeltranslation/css/tabbed_translation_fields.css',),
         }
 
-admin.site.register(Skills)
 admin.site.register(UserProfile)
 admin.site.register(Category)
 admin.site.register(Offer)
 admin.site.register(Review)
+admin.site.register(Skills)
 
 
